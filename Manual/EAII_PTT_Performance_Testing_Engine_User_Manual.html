@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EAII PTT — Performance Testing Engine User Manual</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f7fb;color:#172033;font:15px/1.55 Arial,Helvetica,sans-serif}
+header{background:#101828;color:#fff;padding:42px 6%}header h1{margin:0 0 8px;font-size:34px}header p{margin:0;color:#cbd5e1;font-size:17px}
+nav{background:#fff;border-bottom:1px solid #ddd;position:sticky;top:0;z-index:5;padding:12px 6%}nav a{margin-right:18px;color:#344054;text-decoration:none;font-size:14px}
+main{max-width:1180px;margin:auto;padding:20px 28px}section{background:#fff;border:1px solid #e4e7ec;border-radius:12px;padding:30px;margin:24px 0}
+h2{margin-top:0;color:#101828}h3{color:#1d2939}pre,.flow{background:#0b1220;color:#e5e7eb;border-radius:9px;padding:20px;overflow:auto;font:14px/1.5 Consolas,monospace}
+.flow{white-space:pre-wrap}table{width:100%;border-collapse:collapse;margin:18px 0}th,td{border:1px solid #d0d5dd;padding:11px;text-align:left;vertical-align:top}th{background:#f2f4f7}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}.card{border:1px solid #e4e7ec;border-radius:10px;padding:18px}
+.note{border-left:4px solid #667085;background:#f8fafc;padding:14px 16px;margin:18px 0}.good{border-left-color:#12b76a}.warn{border-left-color:#f79009}.danger{border-left-color:#f04438}
+code{font-family:Consolas,monospace}footer{text-align:center;color:#667085;padding:30px;font-size:13px}
+</style>
+</head>
+<body>
+<header><h1>EAII PTT — Performance Testing Engine User Manual</h1>
+<p>Real API performance testing with k6 and Locust, live monitoring, evaluation, scoring and reporting.</p></header>
+<nav>
+<a href="#run-command">Run Command</a><a href="#quick">Quick Start</a><a href="#engines">Engines</a><a href="#workflow">Workflow</a><a href="#execution">Execution</a>
+<a href="#metrics">Metrics</a><a href="#score">Evaluation</a><a href="#lifecycle">Lifecycle</a><a href="#promql">PromQL</a><a href="#trouble">Troubleshooting</a>
+</nav>
+<main>
+
+
+<section id="run-command">
+<h2>0. Run EAII PTT — Exact Windows Procedure</h2>
+
+<p>This is the first step users must follow before using the EAII PTT interface.</p>
+
+<h3>Step 1 — Open PowerShell</h3>
+<p>Open PowerShell and move into the EAII PTT project directory.</p>
+
+<pre>cd "C:\Users\YOUR_USERNAME\Downloads\EAII_PTT"</pre>
+
+<h3>Step 2 — Run the application</h3>
+<p>Execute the provided Windows startup script:</p>
+
+<pre>.\run_windows.bat</pre>
+
+<h3>Step 3 — What the command does</h3>
+
+<div class="flow">.\run_windows.bat
+        ↓
+Check Node.js
+        ↓
+Check k6
+        ↓
+Check Locust
+        ↓
+Check npm/project dependencies
+        ↓
+Start EAII PTT
+        ↓
+Start Vite
+        ↓
+Start TypeScript application server
+        ↓
+EAII PTT application becomes available</div>
+
+<h3>Expected environment checks</h3>
+
+<pre>================================================
+EAII PTT - Real Performance Executor
+================================================
+
+Checking Node...
+v24.x.x
+
+Checking k6...
+k6.exe v2.x.x
+
+Checking Locust...
+locust 2.x.x from ... (Python 3.x)
+
+Starting EAII PTT (Vite + real executor)...</pre>
+
+<p>The exact version numbers can differ between installations. The important point is that Node.js, k6, and Locust are detected successfully and the application then starts.</p>
+
+<h3>If the startup command fails</h3>
+
+<p>If PowerShell shows:</p>
+
+<pre>'concurrently' is not recognized as an internal or external command,
+operable program or batch file.</pre>
+
+<p>install the project's Node dependencies from the project directory:</p>
+
+<pre>npm install</pre>
+
+<p>Then start EAII PTT again:</p>
+
+<pre>.\run_windows.bat</pre>
+
+<h3>Important</h3>
+
+<div class="note good">
+<strong>Do not replace the real executor with a simulated dashboard.</strong>
+The purpose of <code>.\run_windows.bat</code> is to start the actual EAII PTT application environment so that the selected k6 or Locust engine can perform real test execution.
+</div>
+
+<h3>After the application starts</h3>
+
+<div class="flow">.\run_windows.bat
+        ↓
+EAII PTT opens
+        ↓
+Create / import API
+        ↓
+Select endpoints
+        ↓
+Configure test
+        ↓
+Select k6 or Locust
+        ↓
+Review
+        ↓
+Start Test
+        ↓
+Real engine executes
+</div>
+</section>
+
+<section id="quick">
+<h2>1. Quick Start — Windows</h2>
+<p>Open PowerShell in the EAII PTT project directory and run:</p>
+<pre>.
+un_windows.bat</pre>
+<div class="flow">.
+un_windows.bat
+        ↓
+Check Node.js
+        ↓
+Check k6
+        ↓
+Check Locust
+        ↓
+Start EAII PTT
+        ↓
+Vite + TypeScript application server
+        ↓
+Application ready</div>
+<h3>Required components</h3>
+<table><tr><th>Component</th><th>Purpose</th></tr>
+<tr><td>Node.js</td><td>Runs the frontend/build tooling and TypeScript application server.</td></tr>
+<tr><td>k6</td><td>Real scriptable load/performance-testing engine.</td></tr>
+<tr><td>Locust</td><td>Real Python-based load-testing engine.</td></tr>
+<tr><td>npm dependencies</td><td>Provides the project's packages and commands.</td></tr></table>
+<div class="note warn"><strong>Startup error:</strong> If <code>concurrently is not recognized</code>, install the project dependencies with <code>npm install</code>, then run <code>.
+un_windows.bat</code> again.</div>
+</section>
+
+<section id="engines">
+<h2>2. Testing Engines Used</h2>
+<p>EAII PTT is engine-aware. The selected engine performs the real workload. EAII PTT must not create fake RPS, latency, VU or error values.</p>
+<div class="grid">
+<div class="card"><h3>k6</h3><p><strong>Type:</strong> Scriptable load/performance-testing engine.</p><p><strong>Why:</strong> Good for controlled API scenarios, virtual-user stages, thresholds and structured performance metrics. It is well suited to automated and repeatable load tests.</p><p><strong>EAII PTT:</strong> Builds the k6 workload, starts the real k6 process and consumes its actual measurements.</p></div>
+<div class="card"><h3>Locust</h3><p><strong>Type:</strong> Python-based user-behavior/load-testing engine.</p><p><strong>Why:</strong> Good when workloads need Python-defined user behavior, tasks and flows, and when interactive Locust monitoring is useful.</p><p><strong>EAII PTT:</strong> Builds/starts the Locust workload and consumes actual Locust results.</p></div>
+</div>
+<div class="note good"><strong>Selection rule:</strong> k6 test → k6 execution and metrics. Locust test → Locust execution and metrics. The dashboard must follow the selected engine.</div>
+<h3>Why VUs do not determine RPS</h3>
+<pre>WRONG:
+2000 VUs × arbitrary multiplier = 7000 RPS
+
+RIGHT:
+2000 VUs
+   ↓
+Real k6 / Locust execution
+   ↓
+Real HTTP requests
+   ↓
+Real responses
+   ↓
+Measured request rate = actual RPS</pre>
+</section>
+
+<section id="workflow">
+<h2>3. Complete Test Workflow</h2>
+<div class="flow">01 API SOURCE
+      ↓
+02 ENDPOINTS
+      ↓
+03 TEST PLAN
+      ↓
+04 ENGINE
+      ↓
+05 THRESHOLDS
+      ↓
+06 REVIEW
+      ↓
+07 EXECUTE
+      ↓
+LIVE MONITORING
+      ↓
+ENGINE FINISHES
+      ↓
+VALIDATE FINAL DATA
+      ↓
+EVALUATE
+      ↓
+SCORE + STATUS
+      ↓
+REPORT</div>
+<h3>Six test types</h3>
+<table><tr><th>Type</th><th>Purpose</th></tr>
+<tr><td>Load</td><td>Expected/normal workload.</td></tr>
+<tr><td>Stress</td><td>Progressively increase load to observe degradation and capacity behavior.</td></tr>
+<tr><td>Spike</td><td>Suddenly increase load and observe response and recovery.</td></tr>
+<tr><td>Endurance</td><td>Maintain load for a long period to detect drift or degradation.</td></tr>
+<tr><td>Volume</td><td>Process a large amount of traffic/data and observe sustained behavior.</td></tr>
+<tr><td>Concurrency</td><td>Exercise many simultaneous operations/users and observe behavior under concurrency.</td></tr>
+</table>
+</section>
+
+<section id="execution">
+<h2>4. How the Real Testing Engine Works</h2>
+<div class="flow">TEST CONFIGURATION
+        ↓
+Validate configuration
+        ↓
+Select k6 or Locust
+        ↓
+Build engine-specific workload
+        ↓
+Start real engine process
+        ↓
+Create virtual users / workers
+        ↓
+Execute scenario
+        ↓
+Send REAL HTTP requests
+        ↓
+Target API
+        ↓
+Receive REAL HTTP responses
+        ↓
+Record actual measurements
+        ↓
+Aggregate engine metrics
+        ↓
+EAII PTT live dashboard
+        ↓
+Final result → evaluator</div>
+<h3>Example real request</h3>
+<pre>VU 125
+   ↓
+GET /users
+   ↓
+Target API
+   ↓
+HTTP 200
+   ↓
+143 ms
+
+Recorded:
+Endpoint: /users
+Method:   GET
+Status:   200
+Duration: 143 ms
+Success:  true</pre>
+<h3>Endpoint weights</h3>
+<pre>/users       40%
+/products    30%
+/orders      20%
+/health      10%</pre>
+<p>Weights control workload distribution. They do not directly set RPS.</p>
+</section>
+
+<section id="metrics">
+<h2>5. Real Metrics</h2>
+<table><tr><th>Metric</th><th>What it means</th><th>Measurement source</th></tr>
+<tr><td>Requests</td><td>Actual requests executed/observed.</td><td>k6 / Locust</td></tr>
+<tr><td>RPS</td><td>Actual requests per second.</td><td>Engine request-rate metrics</td></tr>
+<tr><td>AVG</td><td>Average observed response duration.</td><td>Real response timings</td></tr>
+<tr><td>P95</td><td>95th-percentile observed latency.</td><td>Real latency distribution</td></tr>
+<tr><td>P99</td><td>99th-percentile observed latency.</td><td>Real latency distribution</td></tr>
+<tr><td>4xx</td><td>Actual client-error responses.</td><td>HTTP status codes</td></tr>
+<tr><td>5xx</td><td>Actual server-error responses.</td><td>HTTP status codes</td></tr>
+<tr><td>Errors/failures</td><td>Actual failed requests according to the engine/test definition.</td><td>Engine results</td></tr>
+<tr><td>Timeouts</td><td>Requests that exceed the configured timeout.</td><td>Engine execution</td></tr>
+<tr><td>VUs</td><td>Active virtual users.</td><td>Engine state/metrics</td></tr></table>
+<h3>Metric flow</h3>
+<div class="flow">REAL HTTP REQUEST
+        ↓
+REAL HTTP RESPONSE
+        ↓
+Actual duration + status + outcome
+        ↓
+Engine aggregation
+        ↓
+Requests / RPS / AVG / P95 / P99 / errors / timeouts / VUs</div>
+<div class="note">DNS, TCP handshake, TLS handshake, packet loss, server CPU, memory and database-pool telemetry may require additional instrumentation. EAII PTT should never invent these measurements.</div>
+</section>
+
+<section id="score">
+<h2>6. Evaluation and Scoring</h2>
+<div class="flow">REAL ENGINE RESULTS
+        ↓
+Validate result integrity
+        ↓
+Reliability 80% + Performance 20%
+        ↓
+SLA / Quality Gates
+        ↓
+Final score + status</div>
+<h3>Reliability — 80%</h3>
+<table><tr><th>Area</th><th>Weight</th></tr>
+<tr><td>Success / failure</td><td>35%</td></tr>
+<tr><td>HTTP 5xx</td><td>20%</td></tr>
+<tr><td>Timeouts</td><td>15%</td></tr>
+<tr><td>HTTP 4xx</td><td>5%</td></tr>
+<tr><td>Consistency / stability</td><td>5%</td></tr></table>
+<h3>Performance — 20%</h3>
+<p>Uses actual latency and throughput measurements such as AVG, P95/P99 and RPS/throughput according to the configured profile.</p>
+<pre>Final Score =
+(Reliability × 0.80)
++
+(Performance × 0.20)</pre>
+<h3>Critical is a quality-gate result</h3>
+<pre>Example:
+Score = 84 / 100
+P95 = 2800 ms
+Critical P95 limit = 2000 ms
+
+Result:
+Score  = 84 / 100
+Status = CRITICAL</pre>
+<p>A high numerical score must not hide a hard critical SLA breach.</p>
+<div class="note danger"><strong>Zero-data protection:</strong> 0 requests + 0 ms latency is NOT Excellent. It means no valid test evidence exists and the result must be treated as incomplete/no-data.</div>
+</section>
+
+<section id="lifecycle">
+<h2>7. Test Lifecycle</h2>
+<h3>Normal completion</h3>
+<div class="flow">START
+  ↓
+RUNNING
+  ↓
+REAL ENGINE EXECUTION
+  ↓
+ENGINE FINISHES SUCCESSFULLY
+  ↓
+COLLECT FINAL METRICS
+  ↓
+VALIDATE DATA
+  ↓
+EVALUATE
+  ↓
+SCORE + STATUS
+  ↓
+DONE</div>
+<h3>Stopped or failed</h3>
+<div class="flow">RUNNING
+  ↓
+STOP / ENGINE FAILURE
+  ↓
+STOPPED / FAILED
+  ↓
+INCOMPLETE
+  ↓
+NO FINAL SCORE
+  ↓
+NOT DONE</div>
+<p>Partial measurements can be preserved for diagnostics, but they must not be presented as a completed final performance result.</p>
+<h3>Multiple tests</h3>
+<pre>STEP 1  Load       → DONE
+STEP 2  Stress     → DONE
+STEP 3  Spike      → RUNNING
+STEP 4  Endurance  → WAITING</pre>
+<p>The next step should start only after the previous step completes normally with valid final data.</p>
+</section>
+
+<section>
+<h2>8. Live Dashboard</h2>
+<pre>LIVE PERFORMANCE
+
+RPS              1842
+AVG              320 ms
+P95              780 ms
+P99              1240 ms
+Error Rate       0.8%
+Active VUs       1842 / 2000
+Requests         actual count</pre>
+<p>The dashboard must distinguish configured targets from observed activity. For example, 270 configured endpoints does not prove that all 270 endpoints received traffic.</p>
+</section>
+
+<section>
+<h2>9. Reporting</h2>
+<div class="flow">Executive Summary
+      ↓
+Overall Score
+      ↓
+Reliability
+      ↓
+Performance
+      ↓
+Endpoint Performance
+      ↓
+SLA / Quality Gates
+      ↓
+Bottlenecks
+      ↓
+Action Items
+      ↓
+Final Assessment</div>
+<p>Endpoint reports can include method, request count, RPS, AVG, P95, P99, 4xx, 5xx, errors, timeouts and status.</p>
+</section>
+
+
+<section id="promql">
+<h2>14. k6 Metrics, PromQL and Dashboard Mathematics</h2>
+
+<p>This section documents how the live k6 measurements are transformed into the dashboard metrics. The important rule is that these calculations operate on <strong>real engine telemetry</strong>; they do not generate simulated performance numbers.</p>
+
+<div class="flow">REAL k6 REQUESTS
+      ↓
+k6 METRICS
+      ↓
+Prometheus / time-series data
+      ↓
+PromQL aggregation
+      ↓
+EAII PTT dashboard
+      ↓
+Evaluator
+      ↓
+Score + Status</div>
+
+<h3>14.1 Target APIs</h3>
+<pre>count by(endpoint) (k6_http_reqs_total)</pre>
+<p>This groups the request metric by the endpoint label and counts the endpoint time-series represented in the metric data.</p>
+<div class="note warn"><strong>Important:</strong> the resulting count must not automatically be described as “APIs successfully tested.” It represents endpoint metric series observed in the telemetry. To claim that an API was exercised, the test must establish that traffic was actually sent to that endpoint.</div>
+
+<h3>14.2 Overall Live RPS</h3>
+<pre>sum(
+  rate(k6_http_reqs_total{testid="RUN-..."}[1m])
+)</pre>
+<p><code>k6_http_reqs_total</code> is a request counter. <code>rate(...[1m])</code> estimates the per-second request rate over the selected one-minute window. Summing the resulting rates gives the overall request rate for the selected test.</p>
+
+<div class="flow">Request counter
+      ↓
+rate over time window
+      ↓
+Per-second request rate
+      ↓
+sum across relevant series
+      ↓
+Overall RPS</div>
+
+<h3>14.3 Overall P95 and P99 Latency</h3>
+<pre>P95:
+histogram_quantile(
+  0.95,
+  sum by (le) (
+    rate(k6_http_req_duration_bucket{testid="RUN-..."}[1m])
+  )
+)
+
+P99:
+histogram_quantile(
+  0.99,
+  sum by (le) (
+    rate(k6_http_req_duration_bucket{testid="RUN-..."}[1m])
+  )
+)</pre>
+
+<p>Latency histograms represent observed response durations using cumulative buckets. The histogram buckets are aggregated across the selected request series and then <code>histogram_quantile</code> estimates the requested percentile.</p>
+
+<table>
+<tr><th>Percentile</th><th>Meaning</th></tr>
+<tr><td>P95</td><td>Estimated latency at the 95th percentile of the observed latency distribution.</td></tr>
+<tr><td>P99</td><td>Estimated latency at the 99th percentile of the observed latency distribution.</td></tr>
+</table>
+
+<h4>Conceptual bucket calculation</h4>
+<pre>Observed latency
+      ↓
+Assign observation to histogram bucket
+      ↓
+Aggregate buckets across endpoints
+      ↓
+Find bucket containing requested percentile
+      ↓
+Estimate percentile within that bucket
+      ↓
+P95 / P99</pre>
+
+<p>For a percentile <code>φ</code>, the target rank is conceptually:</p>
+<pre>rank = φ × total observations</pre>
+
+<p>The quantile calculation then locates the bucket containing that rank and estimates the value within the bucket according to the histogram representation.</p>
+
+<h3>14.4 Overall Error Rate</h3>
+<pre>
+(
+  sum(k6_http_req_failed{testid="RUN-..."})
+  /
+  sum(k6_http_reqs_total{testid="RUN-..."})
+) × 100
+</pre>
+
+<div class="flow">Real requests
+      ↓
+Request outcome
+      ↓
+failed / total
+      ↓
+× 100
+      ↓
+Error Rate %</div>
+
+<p>The denominator must represent the real requests included in the same test scope. A zero-request test must not be converted into a successful 0.00% performance result.</p>
+
+<h3>14.5 Example Dashboard</h3>
+<pre>Target APIs
+270 endpoint metric series represented
+
+Overall Live RPS
+7,152 RPS
+
+Overall P95 Latency
+106 ms
+
+Overall P99 Latency
+115 ms
+
+Overall Error Rate
+0.00%
+
+Live / Target VUs
+2000 / 2000</pre>
+
+<p>These values are examples of how real telemetry can be presented. The actual dashboard must display the values returned by the running engine/time-series pipeline for the current test.</p>
+
+<h3>14.6 Full Metric Pipeline</h3>
+<div class="flow">VU / Worker
+    ↓
+Real HTTP request
+    ↓
+Target endpoint
+    ↓
+Real HTTP response
+    ↓
+k6 records:
+  • request count
+  • request duration
+  • request outcome
+  • HTTP status
+  • active VUs
+    ↓
+k6 metric aggregation
+    ↓
+Prometheus / time-series storage
+    ↓
+PromQL
+  • endpoint grouping
+  • RPS rate
+  • histogram quantiles
+  • error ratio
+    ↓
+EAII PTT live dashboard
+    ↓
+Final validated metrics
+    ↓
+Evaluator
+    ↓
+Reliability + Performance
+    ↓
+SLA / Quality Gates
+    ↓
+Final Score + Status</div>
+
+<h3>14.7 Critical Data-Integrity Rule</h3>
+<div class="note danger">
+<strong>Never manufacture a result when telemetry is missing.</strong><br><br>
+For example:
+<pre>Requests = 0
+P95 = 0 ms
+P99 = 0 ms
+Error Rate = 0.00%</pre>
+<p>This does <strong>not</strong> mean the system performed excellently. It means there is no valid performance evidence. The run should be treated as <strong>NO DATA / INCOMPLETE</strong> until valid engine measurements exist.</p>
+</div>
+
+<h3>14.8 Separation of Responsibilities</h3>
+<table>
+<tr><th>Layer</th><th>Responsibility</th></tr>
+<tr><td>k6 / Locust</td><td>Generate real workload and collect engine measurements.</td></tr>
+<tr><td>Metrics pipeline</td><td>Transport/store/aggregate engine telemetry.</td></tr>
+<tr><td>PromQL</td><td>Calculate dashboard views such as rates, grouped counts and histogram quantiles where Prometheus metrics are used.</td></tr>
+<tr><td>EAII PTT evaluator</td><td>Interpret validated measurements against thresholds, SLA rules and scoring rules.</td></tr>
+<tr><td>Report</td><td>Present the measured results, evaluation and final assessment.</td></tr>
+</table>
+
+<div class="note good"><strong>Core principle:</strong> The engine measures reality. PromQL calculates views of that measured reality. The evaluator judges the measured reality. No layer should invent performance measurements.</div>
+</section>
+
+<section id="trouble">
+<h2>10. Troubleshooting</h2>
+<h3>Application does not start</h3>
+<pre>npm install
+.
+un_windows.bat</pre>
+<h3><code>concurrently</code> is not recognized</h3>
+<p>The local npm dependency is missing/unavailable. Run <code>npm install</code> from the project directory and restart.</p>
+<h3>k6 or Locust is not found</h3>
+<p>Verify that the corresponding engine is installed and available to the environment used by the startup script.</p>
+<h3>Dashboard shows 0 RPS / 0 ms</h3>
+<p>First verify that the selected engine actually started and generated requests. If there are zero real requests, the application must not convert that into Excellent.</p>
+<h3>Test says Completed but metrics are zero</h3>
+<p>This is a result-integrity failure. Completion should require successful engine termination plus valid final measurements.</p>
+</section>
+
+<section>
+<h2>11. Trustworthiness Rules</h2>
+<table><tr><th>Rule</th><th>Required behavior</th></tr>
+<tr><td>Real load</td><td>Use k6 or Locust to generate real HTTP traffic.</td></tr>
+<tr><td>Real metrics</td><td>RPS, latency, errors, status codes, timeouts and VUs come from real execution.</td></tr>
+<tr><td>No simulation</td><td>Do not use random curves or arbitrary formulas to create performance results.</td></tr>
+<tr><td>Evaluator separation</td><td>The evaluator analyzes measurements; it does not manufacture them.</td></tr>
+<tr><td>Completion integrity</td><td>Completed requires normal engine completion and valid final data.</td></tr>
+<tr><td>Stop integrity</td><td>Stopped/failed tests are incomplete and do not receive a final score.</td></tr>
+<tr><td>Zero-data protection</td><td>Zero requests cannot become Excellent.</td></tr>
+<tr><td>Critical integrity</td><td>Critical status requires an actual critical condition or quality-gate breach.</td></tr>
+</table>
+</section>
+
+<section>
+<h2>12. Final Engine Architecture</h2>
+<div class="flow">                     EAII PTT
+                        │
+                        ▼
+                 TEST CONFIGURATION
+                        │
+                        ▼
+                 TEST ORCHESTRATOR
+                        │
+                  ┌─────┴─────┐
+                  ▼           ▼
+                 k6         Locust
+                  │           │
+                  └─────┬─────┘
+                        ▼
+                 REAL LOAD GENERATION
+                        │
+                        ▼
+                 REAL HTTP REQUESTS
+                        │
+                        ▼
+                    TARGET API
+                        │
+                        ▼
+                 REAL HTTP RESPONSES
+                        │
+                        ▼
+                 REAL ENGINE METRICS
+                        │
+             ┌──────────┼──────────┐
+             ▼          ▼          ▼
+            RPS      LATENCY     ERRORS
+                        │
+                    AVG/P95/P99
+                        │
+                        ▼
+                    EVALUATOR
+                        │
+             ┌──────────┴──────────┐
+             ▼                     ▼
+       Reliability 80%       Performance 20%
+             └──────────┬──────────┘
+                        ▼
+                SLA / QUALITY GATES
+                        │
+             ┌──────────┼──────────┐
+             ▼          ▼          ▼
+         EXCELLENT     GOOD     CRITICAL
+                        │
+                        ▼
+                    FINAL REPORT</div>
+</section>
+
+<section>
+<h2>13. Core Operating Principle</h2>
+<div class="note good"><strong>EAII PTT does not simulate performance:</strong> k6 or Locust generates the real workload, the target API produces real responses, the engine measures the real behavior, and EAII PTT evaluates and reports those measurements.</div>
+</section>
+
+</main>
+<footer>EAII PTT — Performance Testing Tool · Detailed User Manual</footer>
+</body>
+</html>

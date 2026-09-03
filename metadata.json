@@ -1,0 +1,6 @@
+{
+  "name": "EAII Performance Testing Tool",
+  "description": "Enterprise performance testing platform with k6 and Locust engine generators, live Prometheus and Grafana observability, SQLite historical tracking, HAR import, and automated executive evaluation reports.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

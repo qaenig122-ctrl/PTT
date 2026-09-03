@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* EAII PTT Report — premium document styling */
+.eaii-report { max-width: 1440px; margin: 0 auto; letter-spacing: -0.01em; }
+.eaii-report table { border-collapse: separate; border-spacing: 0; }
+.eaii-report th { font-weight: 800; white-space: nowrap; }
+.eaii-report td, .eaii-report th { vertical-align: top; }
+.eaii-report button:focus-visible, .eaii-report input:focus-visible { outline: 2px solid #2563eb; outline-offset: 2px; }
+@media print {
+  body { background: white !important; }
+  .eaii-report { max-width: none !important; color: #0f172a !important; }
+  .eaii-report .fixed { display: none !important; }
+  .eaii-report button { cursor: default !important; }
+  .eaii-report [class*="shadow"] { box-shadow: none !important; }
+  .eaii-report [class*="dark:"] { background: white !important; color: #0f172a !important; }
+  .eaii-report > .relative > div { break-inside: avoid; }
+  .eaii-report table { font-size: 9px; }
+  .eaii-report h1 { font-size: 20px !important; }
+}
